@@ -1,0 +1,40 @@
+# Common
+*.DS_Store
+*.class
+*.classpath
+*.dex
+*.eml
+*.iml
+*.project
+*.swp
+*.settings
+.idea/
+.gradle/
+.metadata
+/releases
+bin/
+gen/
+build/
+log/
+local.properties
+
+# Crashlytics generated file
+com_crashlytics_export_strings.xml
+
+# Fabric secret number
+CollageProtoApp/fabric.properties
+
+# HP version number
+hpprint_ver.txt
+
+# CMake and Makefile.
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+*.cmake
+Makefile
+install_manifest.txt
+UnitTest
+
+# Microsoft Visual Code
+.vscode
