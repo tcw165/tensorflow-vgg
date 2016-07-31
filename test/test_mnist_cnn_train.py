@@ -27,7 +27,8 @@ learning_rate = 0.001
 training_iters = 200000
 # training_iters = 1000
 batch_size = 128
-display_step = 1000
+display_step = 100
+save_step = 1000
 
 # Network Parameters
 n_input = 784  # MNIST data input (img shape: 28*28)
@@ -159,6 +160,7 @@ if __name__ == '__main__':
                       "{:.6f}".format(loss) + ", Training Accuracy= " + \
                       "{:.5f}".format(acc)
 
+            if step % save_step == 0:
                 # Save the model
                 model_data = {
                     "weights": {
