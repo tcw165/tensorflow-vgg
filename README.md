@@ -7,34 +7,25 @@ The main change from the original repo are:
 * The `Vgg` class won't load the VGG model in the constructor so that you are allowed to share the model among multiple `Vgg` instances.
 * The `Vgg` class is now able to do training and prediction and you could shared a model among multiple `Vgg` instance. That makes you more flexible to design the algorithm infrastructure.
 
-To use the VGG networks, you should download the `*.npy` files from <a href="https://dl.dropboxusercontent.com/u/50333326/vgg16.npy">VGG16</a> or <a href="https://dl.dropboxusercontent.com/u/50333326/vgg19.npy">VGG19</a>.
+To use the VGG networks, you should download the `*.npy` files from <a href="https://dl.dropboxusercontent.com/u/50333326/vgg16.npy">VGG16</a> or <a href="https://dl.dropboxusercontent.com/u/50333326/vgg19.npy">VGG19</a> and put them under the `models` directory.
 
 Usage
 -----
 
 It is still under development, please stay tuned. This is a rough example for the prediction.
 
+###Use It for Predicting
+
+First, load the model (around 500MB) to the memory.
+
 ```python
-import numpy as np
-import tensorflow as tf
-
-import test_lib
-import utils
-from vgg19 import Vgg19
-
-model = np.load(test_lib.model_vgg19).item()
+model = np.load("/path/to/your/vgg19.npy").item()
 print("The VGG model is loaded.")
+```
 
-imgs = utils.load_images("./img-airplane-224x224.jpg",
-                         "./img-guitar-224x224.jpg",
-                         "./img-puzzle-224x224.jpg",
-                         "./img-tatoo-plane-224x224.jpg",
-                         "./img-dog-224x224.jpg",
-                         "./img-paper-plane-224x224.jpg",
-                         "./img-pyramid-224x224.jpg",
-                         "./img-tiger-224x224.jpg")
-print("The input image(s) is loaded.")
+New the `Vgg19` instance in the scope of your `tf.Graph`. Run the *graph* in a `tf.Session`.
 
+```python
 # Design the graph.
 graph = tf.Graph()
 with graph.as_default():
@@ -49,8 +40,22 @@ with tf.Session(graph=graph) as sess:
                      feed_dict={
                          nn.inputRGB: imgs
                      })
-    print("There you go the predictions.")
+```
 
-    for pred in preds:
-        utils.print_prediction(pred, test_lib.label_vgg)
+You could also add a `tf.train.SummaryWriter` to summarize whatever you want. Then enter the command, `tensorboard --log=/path/to/your/log/dir`, to see the summary in the web page.
+
+```python
+# Run the graph in the session.
+with tf.Session(graph=graph) as sess:
+    tf.initialize_all_variables().run()
+    print("Tensorflow initialized all variables.")
+
+    # The OP to write logs to Tensorboard.
+    summary_writer = tf.train.SummaryWriter("/path/to/your/log/dir",
+                                            graph=sess.graph)
+
+    preds = sess.run(nn.preds,
+                     feed_dict={
+                         nn.inputRGB: imgs
+                     })
 ```

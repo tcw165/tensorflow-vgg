@@ -14,7 +14,7 @@ def load_images(*paths):
     return imgs
 
 
-def print_prediction(pred, label_file_path):
+def print_prediction(pred, label_file_path, img_path=None):
     """
     Print the top 5 prediction with labels.
     :param pred: The prediction 1d-array.
@@ -22,9 +22,13 @@ def print_prediction(pred, label_file_path):
     """
     synset = [l.strip() for l in open(label_file_path).readlines()]
 
-    # print prob
-    pred = np.argsort(pred)[::-1]
+    # Sort the prediction in ascending order and get the indices.
+    indices = np.argsort(pred)[::-1]
 
     # Get top5 label
-    top5 = [(synset[pred[i]], pred[pred[i]]) for i in range(5)]
-    print("Top5: ", top5)
+    if img_path:
+        print("%s -> %s" % (img_path,
+                            [(synset[indices[i]], pred[indices[i]])
+                             for i in range(5)]))
+    else:
+        print([(synset[indices[i]], pred[indices[i]]) for i in range(5)])
