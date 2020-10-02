@@ -59,3 +59,7 @@ with tf.Session(graph=graph) as sess:
                          nn.inputRGB: imgs
                      })
 ```
+
+installation method:
+pip install tensorflow
+refer: https://www.tensorflow.org/
